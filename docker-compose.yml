@@ -1,0 +1,53 @@
+services:
+  # track-my-gym:
+  #   container_name: track-my-gym-app
+  #   build: .
+  #   working_dir: /app
+  #   volumes:
+  #     - .:/app
+  #   ports:
+  #     - '3000:3000'
+  #   networks:
+  #     - track-my-gym-net
+
+  track-my-gym-db:
+    container_name: track-my-gym-maria
+    build:
+      context: .
+      dockerfile: Dockerfile.db
+    volumes:
+      - v-track-my-gym-db:/var/lib/mysql
+    restart: always
+    ports:
+      - 3306:3306
+    healthcheck:
+      test:
+        ['CMD-SHELL', 'mariadb-admin ping -h localhost -u root -ptinfran2o2o']
+      interval: 10s
+      timeout: 20s
+      retries: 5
+      start_period: 5s
+    networks:
+      - track-my-gym-net
+
+  track-my-gym-myadmin:
+    container_name: track-my-gym-phpmyadmin
+    image: phpmyadmin:5.2.2-apache
+    depends_on:
+      track-my-gym-db:
+        condition: service_healthy
+    restart: always
+    environment:
+      - PMA_HOST=track-my-gym-db
+      - PMA_USER=wushu
+      - PMA_PASSWORD=wushu2o25
+    ports:
+      - 8080:80
+    networks:
+      - track-my-gym-net
+
+networks:
+  track-my-gym-net:
+
+volumes:
+  v-track-my-gym-db:

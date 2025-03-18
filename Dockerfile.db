@@ -1,0 +1,15 @@
+# MariaDB Database
+FROM mariadb:noble
+
+# Set environment variables
+ENV MARIADB_ROOT_PASSWORD=tinfran2o2o
+ENV MARIADB_USER=wushu
+ENV MARIADB_PASSWORD=wushu2o25
+ENV MARIADB_DATABASE=track-my-gym
+
+# Run commands to configure permissions
+# RUN echo "GRANT CREATE, ALTER, DROP ON \`track-my-gym\`.* TO 'wushu'@'%'; GRANT CREATE, ALTER, DROP ON \`track-my-gym-shadow\`.* TO 'wushu'@'%'; FLUSH PRIVILEGES;" > /docker-entrypoint-initdb.d/grant-permissions.sql
+RUN echo "GRANT CREATE, ALTER, DROP ON \`track-my-gym\`.* TO 'wushu'@'%';" > /docker-entrypoint-initdb.d/grant-permissions.sql && \
+  echo "GRANT CREATE, ALTER, DROP ON \`track-my-gym-shadow\`.* TO 'wushu'@'%';" >> /docker-entrypoint-initdb.d/grant-permissions.sql && \
+  echo "FLUSH PRIVILEGES;" >> /docker-entrypoint-initdb.d/grant-permissions.sql && \
+  echo "CREATE DATABASE IF NOT EXISTS \`track-my-gym-shadow\`;" >> /docker-entrypoint-initdb.d/grant-permissions.sql

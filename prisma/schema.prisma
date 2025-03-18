@@ -1,0 +1,513 @@
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider          = "mysql"
+  url               = env("DATABASE_URL")
+  shadowDatabaseUrl = env("SHADOW_DATABASE_URL")
+}
+
+model assets {
+  id                  String                @id @default(dbgenerated("(uuid())")) @db.Char(36)
+  name                String                @unique(map: "name") @db.VarChar(100)
+  description         String?               @db.Text
+  category            String?               @db.VarChar(50)
+  brand               String?               @db.VarChar(50)
+  image_path          String?               @db.VarChar(255)
+  createdAt           DateTime?             @default(now()) @db.DateTime(0)
+  updatedAt           DateTime?             @default(now()) @db.DateTime(0)
+  equipment_inventory equipment_inventory[]
+  purchase_items      purchase_items[]
+  sale_inventory      sale_inventory[]
+}
+
+model certificates {
+  id               String    @id @default(dbgenerated("(uuid())")) @db.Char(36)
+  certificate_type String    @db.VarChar(50)
+  description      String?   @db.VarChar(255)
+  certificate_text String?   @db.Text
+  createdAt        DateTime? @default(now()) @db.DateTime(0)
+  updatedAt        DateTime? @default(now()) @db.DateTime(0)
+}
+
+model client_attendance {
+  id                      String                @id @default(dbgenerated("(uuid())")) @db.Char(36)
+  service_registration_id String                @db.Char(36)
+  attendance_date         DateTime              @db.Date
+  check_in_time           DateTime?             @db.Time(0)
+  check_out_time          DateTime?             @db.Time(0)
+  createdAt               DateTime?             @default(now()) @db.DateTime(0)
+  service_registrations   service_registrations @relation(fields: [service_registration_id], references: [id], onUpdate: Restrict, map: "fk_attendance_registration")
+
+  @@index([service_registration_id], map: "fk_attendance_registration")
+}
+
+model client_documents {
+  id            String    @id @default(dbgenerated("(uuid())")) @db.Char(36)
+  client_id     String    @db.Char(36)
+  document_type String    @db.VarChar(50)
+  file_path     String    @db.VarChar(255)
+  valid_until   DateTime? @db.Date
+  comments      String?   @db.Text
+  createdAt     DateTime? @default(now()) @db.DateTime(0)
+  updatedAt     DateTime? @default(now()) @db.DateTime(0)
+  clients       clients   @relation(fields: [client_id], references: [id], onUpdate: Restrict, map: "fk_client_doc_client")
+
+  @@unique([client_id, document_type], map: "client_id")
+}
+
+model client_payments {
+  id                 String    @id @default(dbgenerated("(uuid())")) @db.Char(36)
+  client_id          String    @db.Char(36)
+  service_id         String?   @db.Char(36)
+  payment_date       DateTime  @db.Date
+  amount             Decimal   @db.Decimal(10, 2)
+  payment_method     String    @db.VarChar(50)
+  proof_payment_path String?   @db.VarChar(255)
+  comments           String?   @db.Text
+  createdAt          DateTime? @default(now()) @db.DateTime(0)
+  updatedAt          DateTime? @default(now()) @db.DateTime(0)
+  clients            clients   @relation(fields: [client_id], references: [id], onUpdate: Restrict, map: "fk_payment_client")
+  services           services? @relation(fields: [service_id], references: [id], onDelete: Restrict, onUpdate: Restrict, map: "fk_payment_service")
+
+  @@index([client_id], map: "fk_payment_client")
+  @@index([service_id], map: "fk_payment_service")
+}
+
+model client_service_levels {
+  id               String    @id @default(dbgenerated("(uuid())")) @db.Char(36)
+  client_id        String    @db.Char(36)
+  service_id       String    @db.Char(36)
+  level            String    @db.VarChar(50)
+  level_start_date DateTime  @db.Date
+  level_end_date   DateTime? @db.Date
+  comments         String?   @db.Text
+  createdAt        DateTime? @default(now()) @db.DateTime(0)
+  clients          clients   @relation(fields: [client_id], references: [id], onUpdate: Restrict, map: "fk_hist_client")
+  services         services  @relation(fields: [service_id], references: [id], onUpdate: Restrict, map: "fk_hist_service")
+
+  @@index([client_id], map: "fk_hist_client")
+  @@index([service_id], map: "fk_hist_service")
+}
+
+model clients {
+  id                    String                  @id @default(dbgenerated("(uuid())")) @db.Char(36)
+  firstName             String                  @db.VarChar(50)
+  lastName              String                  @db.VarChar(50)
+  dateOfBirth           DateTime                @db.Date
+  gender                String?                 @default("O") @db.VarChar(50)
+  phone                 String?                 @db.VarChar(10)
+  email                 String?                 @db.VarChar(100)
+  address               String?                 @db.Text
+  id_number             String                  @unique(map: "id_number") @db.VarChar(10)
+  guardianId            String?                 @db.Char(36)
+  relationship          String?                 @db.VarChar(50)
+  registrationDate      DateTime?               @default(dbgenerated("(curdate())")) @db.Date
+  createdAt             DateTime?               @default(now()) @db.DateTime(0)
+  updatedAt             DateTime?               @default(now()) @db.DateTime(0)
+  client_documents      client_documents[]
+  client_payments       client_payments[]
+  client_service_levels client_service_levels[]
+  clients               clients?                @relation("clientsToclients", fields: [guardianId], references: [id], onDelete: Restrict, onUpdate: Restrict, map: "fk_client_guardian")
+  other_clients         clients[]               @relation("clientsToclients")
+  loyalty_records       loyalty_records[]
+  service_registrations service_registrations[]
+  survey_responses      survey_responses[]
+
+  @@index([guardianId], map: "fk_client_guardian")
+}
+
+model employee_documents {
+  id            String    @id @default(dbgenerated("(uuid())")) @db.Char(36)
+  employee_id   String    @db.Char(36)
+  document_type String    @db.VarChar(50)
+  file_path     String    @db.VarChar(255)
+  valid_until   DateTime? @db.Date
+  comments      String?   @db.Text
+  createdAt     DateTime? @default(now()) @db.DateTime(0)
+  updatedAt     DateTime? @default(now()) @db.DateTime(0)
+  employees     employees @relation(fields: [employee_id], references: [id], onUpdate: Restrict, map: "fk_emp_doc_employee")
+
+  @@unique([employee_id, document_type], map: "employee_id")
+}
+
+model employees {
+  id                 String               @id @default(dbgenerated("(uuid())")) @db.Char(36)
+  firstName          String               @db.VarChar(50)
+  lastName           String               @db.VarChar(50)
+  id_number          String               @unique(map: "id_number") @db.VarChar(10)
+  gender             String?              @db.VarChar(50)
+  role               String               @db.VarChar(50)
+  phone              String?              @db.VarChar(10)
+  email              String?              @db.VarChar(100)
+  contractStart      DateTime?            @db.Date
+  contractEnd        DateTime?            @db.Date
+  status             String?              @default("active") @db.VarChar(50)
+  hireDate           DateTime?            @db.Date
+  createdAt          DateTime?            @default(now()) @db.DateTime(0)
+  updatedAt          DateTime?            @default(now()) @db.DateTime(0)
+  employee_documents employee_documents[]
+  salary_payments    salary_payments[]
+  service_schedules  service_schedules[]
+}
+
+model equipment_inventory {
+  id                    String                  @id @default(dbgenerated("(uuid())")) @db.Char(36)
+  asset_id              String                  @db.Char(36)
+  id_number             String?                 @db.VarChar(50)
+  status                String                  @db.VarChar(50)
+  acquisition_date      DateTime?               @db.Date
+  warranty_expiration   DateTime?               @db.Date
+  comments              String?                 @db.Text
+  createdAt             DateTime?               @default(now()) @db.DateTime(0)
+  updatedAt             DateTime?               @default(now()) @db.DateTime(0)
+  assets                assets                  @relation(fields: [asset_id], references: [id], onUpdate: Restrict, map: "fk_equipinv_asset")
+  equipment_maintenance equipment_maintenance[]
+
+  @@index([asset_id], map: "fk_equipinv_asset")
+}
+
+model equipment_maintenance {
+  id                     String              @id @default(dbgenerated("(uuid())")) @db.Char(36)
+  equipment_inventory_id String              @db.Char(36)
+  maintenance_date_start DateTime            @db.Date
+  reason                 String              @db.VarChar(50)
+  cost                   Decimal?            @db.Decimal(10, 2)
+  maintenance_status     String?             @db.VarChar(50)
+  maintenance_date_end   DateTime?           @db.Date
+  comments               String?             @db.Text
+  equipment_inventory    equipment_inventory @relation(fields: [equipment_inventory_id], references: [id], onUpdate: Restrict, map: "fk_equipmaint_equipment")
+
+  @@index([equipment_inventory_id], map: "fk_equipmaint_equipment")
+}
+
+model event_categories {
+  id                 String               @id @default(dbgenerated("(uuid())")) @db.Char(36)
+  event_id           String               @db.Char(36)
+  category_name      String               @db.VarChar(50)
+  requirements       String?              @db.Text
+  cost               Decimal              @db.Decimal(10, 2)
+  comments           String?              @db.Text
+  createdAt          DateTime?            @default(now()) @db.DateTime(0)
+  updatedAt          DateTime?            @default(now()) @db.DateTime(0)
+  events             events               @relation(fields: [event_id], references: [id], onUpdate: Restrict, map: "fk_eventcat_event")
+  event_participants event_participants[]
+
+  @@index([event_id], map: "fk_eventcat_event")
+}
+
+model event_participants {
+  id                String           @id @default(dbgenerated("(uuid())")) @db.Char(36)
+  event_category_id String           @db.Char(36)
+  participant_id    String           @db.Char(36)
+  participant_type  String           @db.VarChar(50)
+  role              String?          @db.VarChar(50)
+  registration_date DateTime         @db.Date
+  createdAt         DateTime?        @default(now()) @db.DateTime(0)
+  event_categories  event_categories @relation(fields: [event_category_id], references: [id], onUpdate: Restrict, map: "fk_eventpart_category")
+  event_payments    event_payments[]
+  event_results     event_results[]
+
+  @@index([event_category_id], map: "fk_eventpart_category")
+}
+
+model event_payments {
+  id                   String             @id @default(dbgenerated("(uuid())")) @db.Char(36)
+  event_participant_id String             @db.Char(36)
+  payment_date         DateTime           @db.Date
+  amount               Decimal            @db.Decimal(10, 2)
+  payment_method       String             @db.VarChar(50)
+  proof_payment_path   String?            @db.VarChar(255)
+  createdAt            DateTime?          @default(now()) @db.DateTime(0)
+  updatedAt            DateTime?          @default(now()) @db.DateTime(0)
+  event_participants   event_participants @relation(fields: [event_participant_id], references: [id], onUpdate: Restrict, map: "fk_eventpay_eventparticipant")
+
+  @@index([event_participant_id], map: "fk_eventpay_eventparticipant")
+}
+
+model event_results {
+  id                   String             @id @default(dbgenerated("(uuid())")) @db.Char(36)
+  event_participant_id String             @db.Char(36)
+  position             String             @db.VarChar(50)
+  comments             String?            @db.Text
+  recorded_at          DateTime           @db.DateTime(0)
+  createdAt            DateTime?          @default(now()) @db.DateTime(0)
+  event_participants   event_participants @relation(fields: [event_participant_id], references: [id], onUpdate: Restrict, map: "fk_eventresult_eventparticipant")
+
+  @@index([event_participant_id], map: "fk_eventresult_eventparticipant")
+}
+
+model events {
+  id               String             @id @default(dbgenerated("(uuid())")) @db.Char(36)
+  name             String             @unique(map: "name") @db.VarChar(100)
+  description      String?            @db.Text
+  event_type       String             @db.VarChar(50)
+  start_date       DateTime           @db.Date
+  end_date         DateTime?          @db.Date
+  max_payment_date DateTime           @db.Date
+  createdAt        DateTime?          @default(now()) @db.DateTime(0)
+  updatedAt        DateTime?          @default(now()) @db.DateTime(0)
+  event_categories event_categories[]
+}
+
+model expenses {
+  id                 String    @id @default(dbgenerated("(uuid())")) @db.Char(36)
+  description        String    @db.Text
+  category           String    @db.VarChar(50)
+  amount             Decimal   @db.Decimal(10, 2)
+  payment_date       DateTime  @db.Date
+  proof_payment_path String?   @db.VarChar(255)
+  comments           String?   @db.Text
+  createdAt          DateTime? @default(now()) @db.DateTime(0)
+  updatedAt          DateTime? @default(now()) @db.DateTime(0)
+}
+
+model issued_certificates {
+  id          String    @id @default(dbgenerated("(uuid())")) @db.Char(36)
+  person_id   String    @db.Char(36)
+  person_type String    @db.VarChar(50)
+  issued_date DateTime  @db.Date
+  comments    String?   @db.Text
+  createdAt   DateTime? @default(now()) @db.DateTime(0)
+}
+
+model loyalty_criteria {
+  id              String            @id @default(dbgenerated("(uuid())")) @db.Char(36)
+  criterion_name  String            @db.VarChar(100)
+  description     String?           @db.Text
+  createdAt       DateTime?         @default(now()) @db.DateTime(0)
+  updatedAt       DateTime?         @default(now()) @db.DateTime(0)
+  loyalty_records loyalty_records[]
+}
+
+model loyalty_records {
+  id               String           @id @default(dbgenerated("(uuid())")) @db.Char(36)
+  client_id        String           @db.Char(36)
+  criterion_id     String           @db.Char(36)
+  comments         String?          @db.Text
+  score            Int?
+  createdAt        DateTime?        @default(now()) @db.DateTime(0)
+  updatedAt        DateTime?        @default(now()) @db.DateTime(0)
+  clients          clients          @relation(fields: [client_id], references: [id], onUpdate: Restrict, map: "fk_loyalty_client")
+  loyalty_criteria loyalty_criteria @relation(fields: [criterion_id], references: [id], onUpdate: Restrict, map: "fk_loyalty_criterion")
+
+  @@index([client_id], map: "fk_loyalty_client")
+  @@index([criterion_id], map: "fk_loyalty_criterion")
+}
+
+model promotion_criteria {
+  id                String     @id @default(dbgenerated("(uuid())")) @db.Char(36)
+  promotion_id      String     @db.Char(36)
+  criteria_field    String     @db.VarChar(30)
+  criteria_operator String     @db.VarChar(10)
+  criteria_value    String     @db.VarChar(10)
+  createdAt         DateTime?  @default(now()) @db.DateTime(0)
+  updatedAt         DateTime?  @default(now()) @db.DateTime(0)
+  promotions        promotions @relation(fields: [promotion_id], references: [id], onUpdate: Restrict, map: "fk_promocr_promotion")
+
+  @@index([promotion_id], map: "fk_promocr_promotion")
+}
+
+model promotions {
+  id                    String               @id @default(dbgenerated("(uuid())")) @db.Char(36)
+  name                  String               @db.VarChar(100)
+  description           String?              @db.Text
+  discount_value        Decimal              @db.Decimal(10, 2)
+  start_date            DateTime             @db.Date
+  end_date              DateTime             @db.Date
+  applicable_service_id String?              @db.Char(36)
+  and_operator          Int                  @db.TinyInt
+  comments              String?              @db.Text
+  createdAt             DateTime?            @default(now()) @db.DateTime(0)
+  updatedAt             DateTime?            @default(now()) @db.DateTime(0)
+  promotion_criteria    promotion_criteria[]
+  services              services?            @relation(fields: [applicable_service_id], references: [id], onDelete: Restrict, onUpdate: Restrict, map: "fk_promo_service")
+
+  @@index([applicable_service_id], map: "fk_promo_service")
+}
+
+model purchase_items {
+  id          String    @id @default(dbgenerated("(uuid())")) @db.Char(36)
+  purchase_id String    @db.Char(36)
+  asset_id    String    @db.Char(36)
+  quantity    Int
+  price       Decimal   @db.Decimal(10, 2)
+  createdAt   DateTime? @default(now()) @db.DateTime(0)
+  updatedAt   DateTime? @default(now()) @db.DateTime(0)
+  assets      assets    @relation(fields: [asset_id], references: [id], onUpdate: Restrict, map: "fk_purchaseitem_asset")
+  purchases   purchases @relation(fields: [purchase_id], references: [id], onUpdate: Restrict, map: "fk_purchaseitem_purchase")
+
+  @@index([asset_id], map: "fk_purchaseitem_asset")
+  @@index([purchase_id], map: "fk_purchaseitem_purchase")
+}
+
+model purchases {
+  id                 String           @id @default(dbgenerated("(uuid())")) @db.Char(36)
+  supplier_id        String           @db.Char(36)
+  total_amount       Decimal          @db.Decimal(10, 2)
+  purchase_date      DateTime         @db.Date
+  purchase_status    String           @db.VarChar(50)
+  payment_status     String?          @db.VarChar(50)
+  proof_payment_path String?          @db.VarChar(255)
+  comments           String?          @db.Text
+  createdAt          DateTime?        @default(now()) @db.DateTime(0)
+  updatedAt          DateTime?        @default(now()) @db.DateTime(0)
+  purchase_items     purchase_items[]
+  suppliers          suppliers        @relation(fields: [supplier_id], references: [id], onUpdate: Restrict, map: "fk_purchase_supplier")
+
+  @@index([supplier_id], map: "fk_purchase_supplier")
+}
+
+model salary_payments {
+  id                 String    @id @default(dbgenerated("(uuid())")) @db.Char(36)
+  employee_id        String    @db.Char(36)
+  amount             Decimal   @db.Decimal(10, 2)
+  bonus              Decimal?  @default(0.00) @db.Decimal(10, 2)
+  deduction          Decimal?  @default(0.00) @db.Decimal(10, 2)
+  payment_date       DateTime  @db.Date
+  period_start       DateTime? @db.Date
+  period_end         DateTime? @db.Date
+  proof_payment_path String?   @db.VarChar(255)
+  comments           String?   @db.Text
+  createdAt          DateTime? @default(now()) @db.DateTime(0)
+  updatedAt          DateTime? @default(now()) @db.DateTime(0)
+  employees          employees @relation(fields: [employee_id], references: [id], onUpdate: Restrict, map: "fk_salary_employee")
+
+  @@index([employee_id], map: "fk_salary_employee")
+}
+
+model sale_inventory {
+  id          String     @id @default(dbgenerated("(uuid())")) @db.Char(36)
+  asset_id    String     @db.Char(36)
+  price       Decimal    @db.Decimal(10, 2)
+  stock       Int
+  supplier_id String?    @db.Char(36)
+  comments    String?    @db.Text
+  createdAt   DateTime?  @default(now()) @db.DateTime(0)
+  updatedAt   DateTime?  @default(now()) @db.DateTime(0)
+  assets      assets     @relation(fields: [asset_id], references: [id], onUpdate: Restrict, map: "fk_saleinv_asset")
+  suppliers   suppliers? @relation(fields: [supplier_id], references: [id], onDelete: Restrict, onUpdate: Restrict, map: "fk_saleinv_supplier")
+
+  @@unique([supplier_id, asset_id], map: "supplier_id")
+  @@index([asset_id], map: "fk_saleinv_asset")
+}
+
+model service_registrations {
+  id                String              @id @default(dbgenerated("(uuid())")) @db.Char(36)
+  client_id         String              @db.Char(36)
+  service_id        String              @db.Char(36)
+  enrollment_date   DateTime            @db.Date
+  createdAt         DateTime?           @default(now()) @db.DateTime(0)
+  updatedAt         DateTime?           @default(now()) @db.DateTime(0)
+  client_attendance client_attendance[]
+  clients           clients             @relation(fields: [client_id], references: [id], onUpdate: Restrict, map: "fk_reg_client")
+  services          services            @relation(fields: [service_id], references: [id], onUpdate: Restrict, map: "fk_reg_service")
+
+  @@unique([client_id, service_id], map: "client_id")
+  @@index([service_id], map: "fk_reg_service")
+}
+
+model service_schedules {
+  id          String    @id @default(dbgenerated("(uuid())")) @db.Char(36)
+  service_id  String    @db.Char(36)
+  week_day    String    @db.VarChar(20)
+  startTime   DateTime  @db.Time(0)
+  endTime     DateTime  @db.Time(0)
+  employee_id String    @db.Char(36)
+  comments    String?   @db.Text
+  createdAt   DateTime? @default(now()) @db.DateTime(0)
+  updatedAt   DateTime? @default(now()) @db.DateTime(0)
+  employees   employees @relation(fields: [employee_id], references: [id], onUpdate: Restrict, map: "fk_schedule_employee")
+  services    services  @relation(fields: [service_id], references: [id], onUpdate: Restrict, map: "fk_schedule_service")
+
+  @@index([employee_id], map: "fk_schedule_employee")
+  @@index([service_id], map: "fk_schedule_service")
+}
+
+model services {
+  id                    String                  @id @default(dbgenerated("(uuid())")) @db.Char(36)
+  name                  String                  @unique(map: "name") @db.VarChar(100)
+  description           String?                 @db.Text
+  cost                  Decimal                 @db.Decimal(10, 2)
+  billingPeriod         String                  @db.VarChar(50)
+  createdAt             DateTime?               @default(now()) @db.DateTime(0)
+  updatedAt             DateTime?               @default(now()) @db.DateTime(0)
+  client_payments       client_payments[]
+  client_service_levels client_service_levels[]
+  promotions            promotions[]
+  service_registrations service_registrations[]
+  service_schedules     service_schedules[]
+
+  @@index([name], map: "idx_service_name")
+}
+
+model suppliers {
+  id             String           @id @default(dbgenerated("(uuid())")) @db.Char(36)
+  name           String           @unique(map: "name") @db.VarChar(100)
+  id_number      String?          @db.VarChar(13)
+  phone          String?          @db.VarChar(10)
+  email          String?          @db.VarChar(100)
+  address        String?          @db.Text
+  web            String?          @db.VarChar(100)
+  whatsapp       String?          @db.VarChar(10)
+  city           String?          @db.VarChar(50)
+  comments       String?          @db.Text
+  createdAt      DateTime?        @default(now()) @db.DateTime(0)
+  updatedAt      DateTime?        @default(now()) @db.DateTime(0)
+  purchases      purchases[]
+  sale_inventory sale_inventory[]
+
+  @@index([name], map: "idx_supplier_name")
+}
+
+model survey_questions {
+  id            String    @id @default(dbgenerated("(uuid())")) @db.Char(36)
+  survey_id     String    @db.Char(36)
+  question_text String    @db.Text
+  question_type String    @db.VarChar(50)
+  options       String?   @db.Text
+  createdAt     DateTime? @default(now()) @db.DateTime(0)
+  updatedAt     DateTime? @default(now()) @db.DateTime(0)
+  surveys       surveys   @relation(fields: [survey_id], references: [id], onUpdate: Restrict, map: "fk_question_survey")
+
+  @@index([survey_id], map: "fk_question_survey")
+}
+
+model survey_responses {
+  id           String    @id @default(dbgenerated("(uuid())")) @db.Char(36)
+  survey_id    String    @db.Char(36)
+  client_id    String    @db.Char(36)
+  responses    String?   @db.Text
+  submitted_at DateTime? @default(now()) @db.DateTime(0)
+  clients      clients   @relation(fields: [client_id], references: [id], onUpdate: Restrict, map: "fk_response_client")
+  surveys      surveys   @relation(fields: [survey_id], references: [id], onUpdate: Restrict, map: "fk_response_survey")
+
+  @@index([client_id], map: "fk_response_client")
+  @@index([survey_id], map: "fk_response_survey")
+}
+
+model surveys {
+  id                String             @id @default(dbgenerated("(uuid())")) @db.Char(36)
+  title             String             @db.VarChar(100)
+  description       String?            @db.Text
+  google_forms_link String?            @db.VarChar(255)
+  active            Boolean?           @default(true)
+  createdAt         DateTime?          @default(now()) @db.DateTime(0)
+  updatedAt         DateTime?          @default(now()) @db.DateTime(0)
+  survey_questions  survey_questions[]
+  survey_responses  survey_responses[]
+}
+
+model users {
+  id         String    @id @default(dbgenerated("(uuid())")) @db.Char(36)
+  username   String    @unique(map: "username") @db.VarChar(50)
+  first_name String    @db.VarChar(50)
+  last_name  String    @db.VarChar(50)
+  email      String    @unique(map: "idx_email") @db.VarChar(100)
+  password   String    @db.VarChar(255)
+  role       String    @db.VarChar(50)
+  status     String?   @default("active") @db.VarChar(50)
+  createdAt  DateTime? @default(now()) @db.DateTime(0)
+  updatedAt  DateTime? @default(now()) @db.DateTime(0)
+}
