@@ -4,6 +4,19 @@
 
 Track My Gym is a web application designed to help gym owners and managers streamline their daily operations. It simplifies management tasks such as handling memberships, staff scheduling, and inventory tracking, among other features—excluding tax-related tasks.
 
+## Features
+
+- User Registration and Authentication
+- Client Management
+- Staff Management
+- Supplier Management
+- Inventory Management
+- Services Management
+- Events Management
+- Expenses Management
+- Surveys Management
+- Settings
+
 ## Tech Stack
 
 - Next.js
@@ -20,6 +33,9 @@ Track My Gym is a web application designed to help gym owners and managers strea
 - Next Themes
 - Prisma
 - Argon2
+- Faker
+- Husky
+- Commitlint
 
 ## Shadcn Components
 
@@ -46,6 +62,23 @@ Track My Gym is a web application designed to help gym owners and managers strea
 
 ## Todo List
 
+- Basic Packages Installation
+
+  - [x] Install Next.js
+  - [x] Install Tailwind CSS
+  - [x] Install Shadcn UI
+  - [x] Install Sonner
+  - [x] Install React Hook Form
+  - [x] Install Zod
+  - [x] Install Date Fns
+  - [x] Install CmdK
+  - [x] Install React Day Picker
+  - [x] Install Lucide React
+  - [x] Install Next Themes
+  - [x] Install Argon2
+  - [x] Install Husky
+  - [x] Install Commitlint
+
 - Docker
 
   - [x] Create Dockerfile
@@ -56,8 +89,11 @@ Track My Gym is a web application designed to help gym owners and managers strea
   - [x] Create Database Script
   - [x] Install Prisma
   - [x] Create Prisma Client
-  - [x] Create Prisma Schema
   - [x] Test Database Connection
+  - [x] Create Initial Migration
+  - [x] Create Prisma Schema
+  - [x] Install Faker
+  - [x] Create Seeders
 
 - Authentication
 
