@@ -36,6 +36,8 @@ Track My Gym is a web application designed to help gym owners and managers strea
 - Faker
 - Husky
 - Commitlint
+- NextAuth
+- Auth
 
 ## Shadcn Components
 
@@ -59,6 +61,9 @@ Track My Gym is a web application designed to help gym owners and managers strea
 - Separator
 - Sheet
 - Tooltip
+- DropdownMenu
+- Collapsible
+- Breadcrumb
 
 ## Todo List
 
@@ -107,3 +112,69 @@ Track My Gym is a web application designed to help gym owners and managers strea
   - [ ] Create Header
   - [ ] Create Footer
   - [ ] Create Temporarily Dashboard Page
+
+## Folder Structure
+
+```
+├── .env-template
+├── .gitignore
+├── .husky
+    ├── commit-msg
+    └── pre-commit
+├── Dockerfile
+├── Dockerfile.db
+├── README.md
+├── commitlint.config.mjs
+├── components.json
+├── docker-compose.yml
+├── eslint.config.mjs
+├── next.config.ts
+├── package-lock.json
+├── package.json
+├── postcss.config.mjs
+├── prisma
+    ├── migrations
+    │   ├── 20250319163635_init
+    │   │   └── migration.sql
+    │   └── migration_lock.toml
+    ├── schema.prisma
+    ├── seed.ts
+    └── seeders
+    │   ├── seedProd.ts
+    │   └── seedUsers.ts
+├── src
+    ├── app
+    │   ├── globals.css
+    │   ├── layout.tsx
+    │   └── page.tsx
+    ├── components
+    │   └── ui
+    │   │   ├── alert-dialog.tsx
+    │   │   ├── avatar.tsx
+    │   │   ├── button.tsx
+    │   │   ├── calendar.tsx
+    │   │   ├── command.tsx
+    │   │   ├── dialog.tsx
+    │   │   ├── form.tsx
+    │   │   ├── input.tsx
+    │   │   ├── label.tsx
+    │   │   ├── popover.tsx
+    │   │   ├── radio-group.tsx
+    │   │   ├── select.tsx
+    │   │   ├── separator.tsx
+    │   │   ├── sheet.tsx
+    │   │   ├── sidebar.tsx
+    │   │   ├── skeleton.tsx
+    │   │   ├── sonner.tsx
+    │   │   ├── switch.tsx
+    │   │   ├── table.tsx
+    │   │   ├── textarea.tsx
+    │   │   ├── theme-provider.tsx
+    │   │   └── tooltip.tsx
+    ├── hooks
+    │   └── use-mobile.ts
+    └── lib
+    │   └── utils.ts
+├── track_my_gym.sql
+└── tsconfig.json
+```
