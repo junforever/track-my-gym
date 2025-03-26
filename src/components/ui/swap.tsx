@@ -17,12 +17,12 @@ export function Swap({ initialIcon, swappedIcon, callback }: SwapProps) {
   };
 
   return (
-    <div className="flex items-center justify-center p-4">
+    <div className="flex items-center justify-center">
       <Button
         variant="outline"
         size="icon"
         onClick={handleSwap}
-        className="relative rounded-full transition-all duration-300"
+        className="relative rounded-full transition-all duration-300 cursor-pointer"
       >
         <div
           className={`absolute transition-all duration-300 ${

@@ -13,6 +13,7 @@ import { NavUser } from '@/components/layout/nav-user';
 import { Swap } from '@/components/ui/swap';
 import { Moon, Sun } from 'lucide-react';
 import { useTheme } from 'next-themes';
+
 const data = {
   user: {
     name: 'superadmin',
@@ -53,11 +54,16 @@ export function AppTopbar() {
           </BreadcrumbList>
         </Breadcrumb>
       </div>
-      <div className="flex items-center gap-2">
+      <div className="flex items-center gap-x-2">
         <Swap
           initialIcon={<Moon className="w-4 h-4" />}
           swappedIcon={<Sun className="w-4 h-4" />}
           callback={handleSwap}
+        />
+        <Swap
+          initialIcon={<span className="w-4 h-4">ES</span>}
+          swappedIcon={<span className="w-4 h-4">EN</span>}
+          callback={() => {}}
         />
         <NavUser user={data.user} />
       </div>
