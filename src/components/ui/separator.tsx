@@ -19,7 +19,6 @@ function Separator({
   color = 'border',
   ...props
 }: SeparatorProps) {
-  console.log(thickness);
   return (
     <SeparatorPrimitive.Root
       data-slot="separator-root"

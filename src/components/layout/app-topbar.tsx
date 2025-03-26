@@ -1,3 +1,4 @@
+'use client';
 import { SidebarTrigger } from '@/components/ui/sidebar';
 import { Separator } from '@/components/ui/separator';
 import {
@@ -9,6 +10,9 @@ import {
   BreadcrumbLink,
 } from '@/components/ui/breadcrumb';
 import { NavUser } from '@/components/layout/nav-user';
+import { Swap } from '@/components/ui/swap';
+import { Moon, Sun } from 'lucide-react';
+import { useTheme } from 'next-themes';
 const data = {
   user: {
     name: 'superadmin',
@@ -18,6 +22,11 @@ const data = {
 };
 
 export function AppTopbar() {
+  const { setTheme } = useTheme();
+  const handleSwap = (isSwapped: boolean) => {
+    setTheme(isSwapped ? 'dark' : 'light');
+  };
+
   return (
     <header className="flex h-16 shrink-0 items-center justify-between gap-2">
       <div className="flex items-center gap-2 px-4">
@@ -44,7 +53,14 @@ export function AppTopbar() {
           </BreadcrumbList>
         </Breadcrumb>
       </div>
-      <NavUser user={data.user} />
+      <div className="flex items-center gap-2">
+        <Swap
+          initialIcon={<Moon className="w-4 h-4" />}
+          swappedIcon={<Sun className="w-4 h-4" />}
+          callback={handleSwap}
+        />
+        <NavUser user={data.user} />
+      </div>
     </header>
   );
 }
