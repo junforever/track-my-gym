@@ -2,6 +2,9 @@
   "DashboardPage": {
     "title": "Dashboard"
   },
+  "CurrentRouteComponent": {
+    "dashboard": "Dashboard"
+  },
   "LanguageSwitchComponent": {
     "switchToEnglish": "Switch to English",
     "switchToSpanish": "Switch to Spanish"

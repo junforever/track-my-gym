@@ -2,6 +2,9 @@
   "DashboardPage": {
     "title": "Panel de Control"
   },
+  "CurrentRouteComponent": {
+    "dashboard": "Panel de Control"
+  },
   "LanguageSwitchComponent": {
     "switchToEnglish": "Cambiar a Inglés",
     "switchToSpanish": "Cambiar a Español"

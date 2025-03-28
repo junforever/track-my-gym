@@ -1,19 +1,13 @@
+import { headers } from 'next/headers';
 import { SidebarTrigger } from '@/components/ui/sidebar';
 import { Separator } from '@/components/ui/separator';
-import {
-  Breadcrumb,
-  BreadcrumbItem,
-  BreadcrumbList,
-  BreadcrumbPage,
-  BreadcrumbSeparator,
-  BreadcrumbLink,
-} from '@/components/ui/breadcrumb';
 import { NavUser } from '@/components/layout/nav-user';
 import { ThemeSwitch } from '@/components/ui/theme-switch';
 import { shadcnLightTheme } from '@/components/constants/themeConfig';
 import { getCookie } from '@/lib/cookies';
 import { LanguageSwitch } from '@/components/ui/language-switch';
 import { getLocale } from 'next-intl/server';
+import { CurrentRoute } from '@/components/ui/current-route';
 
 const data = {
   user: {
@@ -23,12 +17,25 @@ const data = {
   },
 };
 
+const pathSegment = (pathname: string) => {
+  return pathname
+    .split('/')
+    .filter(Boolean)
+    .map((segment) => decodeURIComponent(segment).replace(/-/g, ' '));
+};
+
 export async function AppTopbar() {
   const themeCookie = await getCookie(
     process.env.NEXT_PUBLIC_THEME_COOKIE!,
     shadcnLightTheme,
   );
   const locale = await getLocale();
+
+  const headersList = await headers();
+  const fullUrl = headersList.get('x-url') || '';
+  const pathname = new URL(fullUrl).pathname;
+  const pathSegments = pathSegment(pathname);
+
   return (
     <header className="flex h-16 shrink-0 items-center justify-between gap-2">
       <div className="flex items-center gap-2 px-4">
@@ -41,19 +48,7 @@ export async function AppTopbar() {
             color="white"
           />
         </div>
-        <Breadcrumb>
-          <BreadcrumbList>
-            <BreadcrumbItem className="hidden md:block">
-              <BreadcrumbLink href="#">
-                Building Your Application
-              </BreadcrumbLink>
-            </BreadcrumbItem>
-            <BreadcrumbSeparator className="hidden md:block" />
-            <BreadcrumbItem>
-              <BreadcrumbPage>Data Fetching</BreadcrumbPage>
-            </BreadcrumbItem>
-          </BreadcrumbList>
-        </Breadcrumb>
+        <CurrentRoute pathSegments={pathSegments} />
       </div>
       <div className="flex items-center gap-x-2">
         <ThemeSwitch themeCookie={themeCookie} />
