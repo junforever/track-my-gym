@@ -2,6 +2,38 @@
   "DashboardPage": {
     "title": "Dashboard"
   },
+  "LanguageSwitchComponent": {
+    "switchToEnglish": "Switch to English",
+    "switchToSpanish": "Switch to Spanish"
+  },
+  "ThemeSwitchComponent": {
+    "switchToDarkMode": "Switch to Dark Mode",
+    "switchToLightMode": "Switch to Light Mode"
+  },
+  "AppSidebarOptions": {
+    "clients": "Clients",
+    "clientsManagement": "Clients Management",
+    "dataDocs": "Data & Documentation",
+    "clientsAttendance": "Clients Attendance",
+    "staff": "Staff",
+    "staffManagement": "Staff Management",
+    "staffAssignation": "Staff Assignation",
+    "staffAttendance": "Staff Attendance",
+    "staffVacation": "Staff Vacation",
+    "salaryPayments": "Salary Payments",
+    "services": "Services",
+    "servicesManagement": "Services Management",
+    "servicesCatalog": "Services Catalog",
+    "servicesSchedules": "Services Schedules",
+    "servicesRegistration": "Services Registration",
+    "servicesPayments": "Services Payments"
+  },
+  "navUserComponent": {
+    "settings": "Settings",
+    "account": "Account",
+    "users": "Users",
+    "logOut": "Log Out"
+  },
   "Common": {
     "submit": "Submit",
     "cancel": "Cancel"

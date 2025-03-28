@@ -16,7 +16,7 @@ import {
   SidebarMenuItem,
 } from '@/components/ui/sidebar';
 
-import { appSidebarOptions } from './appSidebarOptions';
+import { useAppSidebarOptions } from './appSidebarOptions';
 
 // const data = {
 //   user: {
@@ -27,6 +27,7 @@ import { appSidebarOptions } from './appSidebarOptions';
 // };
 
 export function AppSidebar({ ...props }: React.ComponentProps<typeof Sidebar>) {
+  const { navMain } = useAppSidebarOptions();
   return (
     <Sidebar variant="inset" {...props}>
       <SidebarHeader>
@@ -53,7 +54,7 @@ export function AppSidebar({ ...props }: React.ComponentProps<typeof Sidebar>) {
         </SidebarMenu>
       </SidebarHeader>
       <SidebarContent>
-        <NavMain items={appSidebarOptions.navMain} />
+        <NavMain items={navMain} />
         {/* <NavProjects projects={data.projects} />
         <NavSecondary items={data.navSecondary} className="mt-auto" /> */}
       </SidebarContent>

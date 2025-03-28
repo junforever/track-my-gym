@@ -2,6 +2,38 @@
   "DashboardPage": {
     "title": "Panel de Control"
   },
+  "LanguageSwitchComponent": {
+    "switchToEnglish": "Cambiar a Inglés",
+    "switchToSpanish": "Cambiar a Español"
+  },
+  "ThemeSwitchComponent": {
+    "switchToDarkMode": "Cambiar a Modo Oscuro",
+    "switchToLightMode": "Cambiar a Modo Claro"
+  },
+  "AppSidebarOptions": {
+    "clients": "Clientes",
+    "clientsManagement": "Gestión de Clientes",
+    "dataDocs": "Datos & Documentación",
+    "clientsAttendance": "Registro de Asistencia",
+    "staff": "Personal",
+    "staffManagement": "Gestión de Personal",
+    "staffAssignation": "Asignación a Servicios",
+    "staffAttendance": "Registro de Asistencia",
+    "staffVacation": "Registro de Vacaciones",
+    "salaryPayments": "Pago de Salarios",
+    "services": "Servicios",
+    "servicesManagement": "Gestión de Servicios",
+    "servicesCatalog": "Catálogo de Servicios",
+    "servicesSchedules": "Registro de Horarios",
+    "servicesRegistration": "Inscripción en Servicios",
+    "servicesPayments": "Pagos de Clientes por Servicios"
+  },
+  "navUserComponent": {
+    "settings": "Configuraciones",
+    "account": "Cuenta",
+    "users": "Usuarios",
+    "logOut": "Cerrar Sesión"
+  },
   "Common": {
     "submit": "Enviar",
     "cancel": "Cancelar"

@@ -17,6 +17,7 @@ import {
   SidebarMenuItem,
   useSidebar,
 } from '@/components/ui/sidebar';
+import { useTranslations } from 'next-intl';
 
 const tmgAvatar = '/images/track-my-gym-avatar.png';
 export function NavUser({
@@ -29,6 +30,7 @@ export function NavUser({
   };
 }) {
   const { isMobile } = useSidebar();
+  const t = useTranslations('navUserComponent');
 
   return (
     <SidebarMenu className="basis-[12rem] border-1 rounded-lg mr-2">
@@ -70,18 +72,18 @@ export function NavUser({
             <DropdownMenuGroup>
               <DropdownMenuItem>
                 <Settings />
-                Configuraciones
+                {t('settings')}
               </DropdownMenuItem>
             </DropdownMenuGroup>
             <DropdownMenuSeparator />
             <DropdownMenuGroup>
               <DropdownMenuItem>
                 <BadgeCheck />
-                Cuenta
+                {t('account')}
               </DropdownMenuItem>
               <DropdownMenuItem>
                 <UsersRound />
-                Usuarios
+                {t('users')}
               </DropdownMenuItem>
               {/* <DropdownMenuItem>
                 <Bell />
@@ -91,7 +93,7 @@ export function NavUser({
             <DropdownMenuSeparator />
             <DropdownMenuItem>
               <LogOut />
-              Cerrar Sesión
+              {t('logOut')}
             </DropdownMenuItem>
           </DropdownMenuContent>
         </DropdownMenu>

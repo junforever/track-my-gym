@@ -1,89 +1,93 @@
 import { ContactRound, BriefcaseBusiness, BicepsFlexed } from 'lucide-react';
+import { useTranslations } from 'next-intl';
 
-export const appSidebarOptions = {
-  navMain: [
-    {
-      group: 'Clientes',
-      menus: [
-        {
-          title: 'Gestión de Clientes',
-          url: '#',
-          icon: ContactRound,
-          isActive: true,
-          items: [
-            {
-              title: 'Datos & Documentación',
-              url: '#',
-            },
-            {
-              title: 'Registro de Asistencia',
-              url: '#',
-            },
-          ],
-        },
-      ],
-    },
-    {
-      group: 'Personal',
-      menus: [
-        {
-          title: 'Gestión de Personal',
-          url: '#',
-          icon: BriefcaseBusiness,
-          isActive: true,
-          items: [
-            {
-              title: 'Datos & Documentación',
-              url: '#',
-            },
-            {
-              title: 'Asignación a Servicios',
-              url: '#',
-            },
-            {
-              title: 'Registro de Asistencia',
-              url: '#',
-            },
-            {
-              title: 'Registro de Vacaciones',
-              url: '#',
-            },
-            {
-              title: 'Pago de Salarios',
-              url: '#',
-            },
-          ],
-        },
-      ],
-    },
-    {
-      group: 'Servicios',
-      menus: [
-        {
-          title: 'Gestión de Servicios',
-          url: '#',
-          icon: BicepsFlexed,
-          isActive: true,
-          items: [
-            {
-              title: 'Catálogo de Servicios',
-              url: '#',
-            },
-            {
-              title: 'Registro de Horarios',
-              url: '#',
-            },
-            {
-              title: 'Inscripción en Servicios',
-              url: '#',
-            },
-            {
-              title: 'Pagos de Clientes por Servicios',
-              url: '#',
-            },
-          ],
-        },
-      ],
-    },
-  ],
+export const useAppSidebarOptions = () => {
+  const t = useTranslations('AppSidebarOptions');
+  return {
+    navMain: [
+      {
+        group: t('clients'),
+        menus: [
+          {
+            title: t('clientsManagement'),
+            url: '#',
+            icon: ContactRound,
+            isActive: true,
+            items: [
+              {
+                title: t('dataDocs'),
+                url: '#',
+              },
+              {
+                title: t('clientsAttendance'),
+                url: '#',
+              },
+            ],
+          },
+        ],
+      },
+      {
+        group: t('staff'),
+        menus: [
+          {
+            title: t('staffManagement'),
+            url: '#',
+            icon: BriefcaseBusiness,
+            isActive: true,
+            items: [
+              {
+                title: t('dataDocs'),
+                url: '#',
+              },
+              {
+                title: t('staffAssignation'),
+                url: '#',
+              },
+              {
+                title: t('staffAttendance'),
+                url: '#',
+              },
+              {
+                title: t('staffVacation'),
+                url: '#',
+              },
+              {
+                title: t('salaryPayments'),
+                url: '#',
+              },
+            ],
+          },
+        ],
+      },
+      {
+        group: t('services'),
+        menus: [
+          {
+            title: t('servicesManagement'),
+            url: '#',
+            icon: BicepsFlexed,
+            isActive: true,
+            items: [
+              {
+                title: t('servicesCatalog'),
+                url: '#',
+              },
+              {
+                title: t('servicesSchedules'),
+                url: '#',
+              },
+              {
+                title: t('servicesRegistration'),
+                url: '#',
+              },
+              {
+                title: t('servicesPayments'),
+                url: '#',
+              },
+            ],
+          },
+        ],
+      },
+    ],
+  };
 };

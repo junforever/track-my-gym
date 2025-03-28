@@ -1,11 +1,11 @@
 import { getRequestConfig } from 'next-intl/server';
-import { nextIntlDefaultLocale } from './config';
+import { nextIntlEsLocale } from './config';
 import { getCookie } from '@/lib/cookies';
 
 export default getRequestConfig(async () => {
   const locale = await getCookie(
     process.env.NEXT_PUBLIC_LOCALE_COOKIE!,
-    nextIntlDefaultLocale,
+    nextIntlEsLocale,
   );
 
   return {

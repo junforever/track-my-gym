@@ -8,36 +8,37 @@ import {
   shadcnLightTheme,
   shadcnDarkTheme,
 } from '@/components/constants/themeConfig';
+import { setCookie } from '@/lib/cookies';
+import { useTranslations } from 'next-intl';
 
-// Higher Order Component that wraps Swap component for theme switching
-export function ThemeSwitch({ cookieTheme }: { cookieTheme: string }) {
+export function ThemeSwitch({ themeCookie }: { themeCookie: string }) {
   const { theme, setTheme } = useTheme();
   const [mounted, setMounted] = useState(false);
+  const t = useTranslations('ThemeSwitchComponent');
 
-  // Ensure component is mounted to avoid hydration mismatch
   useEffect(() => {
     setMounted(true);
-    setTheme(cookieTheme);
+    setTheme(themeCookie);
   }, []);
 
-  // Prevent hydration mismatch by only rendering after mount
   if (!mounted) {
     return null;
   }
 
   const handleThemeChange = (isSwapped: boolean) => {
     setTheme(isSwapped ? shadcnDarkTheme : shadcnLightTheme);
-    document.cookie = `${process.env.NEXT_PUBLIC_THEME_COOKIE}=${
-      isSwapped ? shadcnDarkTheme : shadcnLightTheme
-    }; path=/; secure; sameSite=Strict`;
+    setCookie(
+      process.env.NEXT_PUBLIC_THEME_COOKIE!,
+      isSwapped ? shadcnDarkTheme : shadcnLightTheme,
+    );
   };
 
   return (
     <Swap
       initialIcon={<Sun className="h-4 w-4" />}
-      initialIconTitle="Switch to dark mode"
+      initialIconTitle={t('switchToDarkMode')}
       swappedIcon={<Moon className="h-4 w-4" />}
-      swappedIconTitle="Switch to light mode"
+      swappedIconTitle={t('switchToLightMode')}
       initialState={theme === shadcnDarkTheme}
       callback={handleThemeChange}
     />
