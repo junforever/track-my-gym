@@ -17,13 +17,6 @@ const data = {
   },
 };
 
-const pathSegment = (pathname: string) => {
-  return pathname
-    .split('/')
-    .filter(Boolean)
-    .map((segment) => decodeURIComponent(segment).replace(/-/g, ' '));
-};
-
 export async function AppTopbar() {
   const themeCookie = await getCookie(
     process.env.NEXT_PUBLIC_THEME_COOKIE!,
@@ -33,8 +26,7 @@ export async function AppTopbar() {
 
   const headersList = await headers();
   const fullUrl = headersList.get('x-url') || '';
-  const pathname = new URL(fullUrl).pathname;
-  const pathSegments = pathSegment(pathname);
+  const fullPath = new URL(fullUrl).pathname;
 
   return (
     <header className="flex h-16 shrink-0 items-center justify-between gap-2">
@@ -48,7 +40,7 @@ export async function AppTopbar() {
             color="white"
           />
         </div>
-        <CurrentRoute pathSegments={pathSegments} />
+        <CurrentRoute fullPath={fullPath} />
       </div>
       <div className="flex items-center gap-x-2">
         <ThemeSwitch themeCookie={themeCookie} />
