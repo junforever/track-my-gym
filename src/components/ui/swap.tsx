@@ -4,12 +4,22 @@ import { Button } from '@/components/ui/button';
 
 interface SwapProps {
   initialIcon: React.ReactNode;
+  initialIconTitle: string;
   swappedIcon: React.ReactNode;
+  swappedIconTitle: string;
+  initialState?: boolean;
   callback: (isSwapped: boolean) => void;
 }
 
-export function Swap({ initialIcon, swappedIcon, callback }: SwapProps) {
-  const [isSwapped, setIsSwapped] = useState(false);
+export function Swap({
+  initialIcon,
+  initialIconTitle,
+  swappedIcon,
+  swappedIconTitle,
+  initialState,
+  callback,
+}: SwapProps) {
+  const [isSwapped, setIsSwapped] = useState(initialState || false);
 
   const handleSwap = () => {
     setIsSwapped(!isSwapped);
@@ -23,6 +33,8 @@ export function Swap({ initialIcon, swappedIcon, callback }: SwapProps) {
         size="icon"
         onClick={handleSwap}
         className="relative rounded-full transition-all duration-300 cursor-pointer"
+        title={isSwapped ? swappedIconTitle : initialIconTitle}
+        aria-label={isSwapped ? swappedIconTitle : initialIconTitle}
       >
         <div
           className={`absolute transition-all duration-300 ${

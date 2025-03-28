@@ -1,0 +1,9 @@
+{
+  "DashboardPage": {
+    "title": "Dashboard"
+  },
+  "Common": {
+    "submit": "Submit",
+    "cancel": "Cancel"
+  }
+}

@@ -1,4 +1,3 @@
-'use client';
 import { SidebarTrigger } from '@/components/ui/sidebar';
 import { Separator } from '@/components/ui/separator';
 import {
@@ -10,9 +9,9 @@ import {
   BreadcrumbLink,
 } from '@/components/ui/breadcrumb';
 import { NavUser } from '@/components/layout/nav-user';
-import { Swap } from '@/components/ui/swap';
-import { Moon, Sun } from 'lucide-react';
-import { useTheme } from 'next-themes';
+import { ThemeSwitch } from '@/components/ui/theme-switch';
+import { shadcnLightTheme } from '@/components/constants/themeConfig';
+import { getCookie } from '@/lib/cookies';
 
 const data = {
   user: {
@@ -22,12 +21,11 @@ const data = {
   },
 };
 
-export function AppTopbar() {
-  const { setTheme } = useTheme();
-  const handleSwap = (isSwapped: boolean) => {
-    setTheme(isSwapped ? 'dark' : 'light');
-  };
-
+export async function AppTopbar() {
+  const cookieTheme = await getCookie(
+    process.env.NEXT_PUBLIC_THEME_COOKIE!,
+    shadcnLightTheme,
+  );
   return (
     <header className="flex h-16 shrink-0 items-center justify-between gap-2">
       <div className="flex items-center gap-2 px-4">
@@ -55,16 +53,12 @@ export function AppTopbar() {
         </Breadcrumb>
       </div>
       <div className="flex items-center gap-x-2">
-        <Swap
-          initialIcon={<Moon className="w-4 h-4" />}
-          swappedIcon={<Sun className="w-4 h-4" />}
-          callback={handleSwap}
-        />
-        <Swap
+        <ThemeSwitch cookieTheme={cookieTheme} />
+        {/* <Swap
           initialIcon={<span className="w-4 h-4">ES</span>}
           swappedIcon={<span className="w-4 h-4">EN</span>}
           callback={() => {}}
-        />
+        /> */}
         <NavUser user={data.user} />
       </div>
     </header>

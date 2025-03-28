@@ -1,0 +1,9 @@
+{
+  "DashboardPage": {
+    "title": "Panel de Control"
+  },
+  "Common": {
+    "submit": "Enviar",
+    "cancel": "Cancelar"
+  }
+}
