@@ -3,7 +3,8 @@ import { Toaster as Sonner } from '@/components/ui/sonner';
 import { ThemeProvider } from '@/components/ui/theme-provider';
 import { getLocale } from 'next-intl/server';
 import { NextIntlClientProvider } from 'next-intl';
-
+import { getCookie } from '@/lib/cookies';
+import { shadcnLightTheme } from '@/components/constants/themeConfig';
 import './globals.css';
 
 export const metadata: Metadata = {
@@ -17,12 +18,16 @@ export default async function RootLayout({
   children: React.ReactNode;
 }>) {
   const locale = await getLocale();
+  const theme = await getCookie(
+    process.env.NEXT_PUBLIC_THEME_COOKIE!,
+    shadcnLightTheme,
+  );
   return (
-    <html lang={locale}>
+    <html lang={locale} className={theme} style={{ colorScheme: theme }}>
       <body>
         <ThemeProvider
           attribute="class"
-          defaultTheme="dark"
+          defaultTheme={theme}
           enableSystem
           disableTransitionOnChange
         >
