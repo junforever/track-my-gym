@@ -38,6 +38,7 @@ Track My Gym is a web application designed to help gym owners and managers strea
 - Commitlint
 - NextAuth
 - Auth
+- NextIntl
 
 ## Shadcn Components
 
@@ -64,6 +65,7 @@ Track My Gym is a web application designed to help gym owners and managers strea
 - DropdownMenu
 - Collapsible
 - Breadcrumb
+- Card
 
 ## Todo List
 
@@ -83,6 +85,7 @@ Track My Gym is a web application designed to help gym owners and managers strea
   - [x] Install Argon2
   - [x] Install Husky
   - [x] Install Commitlint
+  - [x] Install NextAuth
 
 - Docker
 
@@ -100,9 +103,22 @@ Track My Gym is a web application designed to help gym owners and managers strea
   - [x] Install Faker
   - [x] Create Seeders
 
+- Internationalization
+
+  - [x] Install NextIntl
+  - [x] Create NextIntl Config
+  - [x] Create NextIntl Language Files
+  - [x] Create Language Switcher
+
+- Theme Change
+
+  - [x] Install NextThemes
+  - [x] Create Theme Switcher
+
 - Authentication
 
-  - [ ] Create Login Page
+  - [x] Create Login Form
+  - [x] Create Login Page
   - [ ] Manage Login with NextAuth
 
 - Dashboard
