@@ -1,4 +1,4 @@
-import { UsersSchema } from '@/modules/users/domain/entities/Users';
+import { UsersSchema, Users } from '@/modules/users/domain/entities/Users';
 import { z } from 'zod';
 
 export const AuthCredentials = UsersSchema.pick({
@@ -15,3 +15,7 @@ export type AuthResponse = {
   ok: boolean;
   error?: undefined | string;
 };
+
+export type AuthSession = Partial<
+  Pick<Users, 'id' | 'username' | 'role' | 'email'>
+>;

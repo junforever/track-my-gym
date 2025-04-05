@@ -38,7 +38,6 @@ export default function LoginForm({
     setIsLoading(true);
     const response = await handleLogin(values.username, values.password);
 
-    //console.log('prueba:', response);
     if (response?.error) {
       toast.error('Error de inicio de sesión', {
         duration: 5000,

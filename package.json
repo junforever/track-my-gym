@@ -17,6 +17,7 @@
     "test:coverage": "vitest run --coverage"
   },
   "dependencies": {
+    "@auth/core": "^0.38.0",
     "@auth/prisma-adapter": "^2.8.0",
     "@faker-js/faker": "^9.6.0",
     "@hookform/resolvers": "^4.1.3",

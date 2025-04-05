@@ -12,15 +12,16 @@ interface CustomToken extends JWT {
   id?: string;
   username?: string;
   role?: string;
+  email?: string;
 }
 
-interface CustomSession extends Session {
+export interface CustomSession extends Session {
   user: {
     id?: string;
     username?: string;
     role?: string;
+    email?: string;
     name?: string | null;
-    email?: string | null;
     image?: string | null;
   };
 }
@@ -78,25 +79,15 @@ export const { auth, handlers, signIn, signOut } = NextAuth({
     maxAge: 8 * 60 * 60, // 8 hours
     updateAge: 4 * 60 * 60, // 4 hours
   },
-  cookies: {
-    sessionToken: {
-      name: '__Secure-next-auth.session-token',
-      options: {
-        httpOnly: true,
-        secure: true,
-        sameSite: 'strict', // none, lax
-      },
-    },
-  },
   callbacks: {
     async jwt({ token, user }) {
       const customToken = token as CustomToken;
 
       if (user) {
-        // Cast user to Users type if needed
         const userData = user as unknown as Users;
         customToken.id = userData.id;
         customToken.username = userData.username;
+        customToken.email = userData.email;
         customToken.role = userData.role;
       }
       return customToken;
@@ -104,12 +95,12 @@ export const { auth, handlers, signIn, signOut } = NextAuth({
     async session({ session, token }) {
       const customSession = session as CustomSession;
       const customToken = token as CustomToken;
-
       if (customToken) {
         customSession.user = {
           ...customSession.user,
           id: customToken.id,
           username: customToken.username,
+          email: customToken.email,
           role: customToken.role,
         };
       }

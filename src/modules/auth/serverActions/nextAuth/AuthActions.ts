@@ -1,7 +1,7 @@
 'use server';
 
 import { AuthNextAuthAdapter } from '@/modules/auth/infrastructure/nextAuth/AuthNextAuthAdapter';
-import { AuthResponse } from '@/modules/auth/domain/entities/Auth';
+import { AuthResponse, AuthSession } from '@/modules/auth/domain/entities/Auth';
 
 const authAdapter = new AuthNextAuthAdapter();
 
@@ -21,4 +21,8 @@ export async function handleLogin(
 
 export async function handleLogout(): Promise<void> {
   return authAdapter.Logout();
+}
+
+export async function handleActiveSession(): Promise<AuthSession | null> {
+  return authAdapter.ActiveSession();
 }
