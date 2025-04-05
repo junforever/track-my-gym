@@ -1,11 +1,11 @@
-import { Users, CreateUserData, UpdateUserData } from '../entities/Users';
+import { Users, CreateUsersData, UpdateUsersData } from '../entities/Users';
 
 export interface UsersPort {
-  createUser(user: CreateUserData): Promise<Users>;
-  updateUser(user: UpdateUserData): Promise<Users>;
-  deleteUser(id: string): Promise<Users>;
+  createUsers(user: CreateUsersData): Promise<Users>;
+  updateUsers(user: UpdateUsersData): Promise<Users>;
+  deleteUsers(id: string): Promise<Users>;
 
-  findUserByUsername(username: string): Promise<Users | null>;
-  findUserById(id: string): Promise<Users | null>;
+  findUsersByUsername(username: string): Promise<Users | null>;
+  findUsersById(id: string): Promise<Users | null>;
   findAllUsers(): Promise<Users[]>;
 }

@@ -18,6 +18,7 @@ import {
   useSidebar,
 } from '@/components/ui/sidebar';
 import { useTranslations } from 'next-intl';
+import { handleLogout } from '@/modules/auth/serverActions/nextAuth/AuthActions';
 
 const tmgAvatar = '/images/track-my-gym-avatar.png';
 export function NavUser({
@@ -91,7 +92,7 @@ export function NavUser({
               </DropdownMenuItem> */}
             </DropdownMenuGroup>
             <DropdownMenuSeparator />
-            <DropdownMenuItem>
+            <DropdownMenuItem onClick={handleLogout}>
               <LogOut />
               {t('logOut')}
             </DropdownMenuItem>
