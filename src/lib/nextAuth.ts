@@ -2,11 +2,11 @@ import { AuthQuery, AuthHash } from '@/modules/auth/domain/ports/AuthPort';
 import Credentials from 'next-auth/providers/credentials';
 import { Users } from '@/modules/users/domain/entities/Users';
 import { JWT } from 'next-auth/jwt';
-import { Session } from 'next-auth';
-import NextAuth from 'next-auth';
+import NextAuth, { Session } from 'next-auth';
 import { AuthPrismaAdapter } from '@/modules/auth/infrastructure/prisma/AuthPrismaAdapter';
 import { UsersPrismaAdapter } from '@/modules/users/infrastructure/prisma/UsersPrismaAdapter';
 import { AuthArgon2Adapter } from '@/modules/auth/infrastructure/argon2/AuthArgon2Adapter';
+import { AuthLoginCase } from '@/modules/auth/application/AuthUseCases';
 
 interface CustomToken extends JWT {
   id?: string;
@@ -28,6 +28,7 @@ export interface CustomSession extends Session {
 
 const authQuery: AuthQuery = new AuthPrismaAdapter(new UsersPrismaAdapter());
 const authHash: AuthHash = new AuthArgon2Adapter();
+const authLoginCase = new AuthLoginCase(authQuery, authHash);
 
 export const { auth, handlers, signIn, signOut } = NextAuth({
   providers: [
@@ -41,26 +42,8 @@ export const { auth, handlers, signIn, signOut } = NextAuth({
         try {
           const { username, password } = credentials;
 
-          if (!username || !password) {
-            throw new Error('Nombre de usuario y contraseña requeridos');
-          }
-
           if (typeof username === 'string' && typeof password === 'string') {
-            const user = await authQuery.findUsersByUsername(username);
-
-            if (!user) {
-              throw new Error('Usuario y/o contraseña incorrectos');
-            }
-
-            const isPasswordValid = await authHash.validatePassword(
-              user.password,
-              password,
-            );
-
-            if (!isPasswordValid) {
-              throw new Error('Usuario y/o contraseña incorrectos');
-            }
-
+            const user = await authLoginCase.login(username, password);
             return user;
           }
 

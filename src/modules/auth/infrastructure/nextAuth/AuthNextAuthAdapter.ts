@@ -1,11 +1,13 @@
-import { AuthPort } from '@/modules/auth/domain/ports/AuthPort';
-import { AuthResponse } from '@/modules/auth/domain/entities/Auth';
-import { signIn, signOut, auth } from '@/lib/nextAuth';
-import { AuthSession } from '@/modules/auth/domain/entities/Auth';
-import { CustomSession } from '@/lib/nextAuth';
+import {
+  AuthActiveSession,
+  AuthLogin,
+  AuthLogout,
+} from '@/modules/auth/domain/ports/AuthPort';
+import { AuthResponse, AuthSession } from '@/modules/auth/domain/entities/Auth';
+import { signIn, signOut, auth, CustomSession } from '@/lib/nextAuth';
 
-export class AuthNextAuthAdapter implements AuthPort {
-  async Login(username: string, password: string): Promise<AuthResponse> {
+export class AuthNextAuthLoginAdapter implements AuthLogin {
+  async login(username: string, password: string): Promise<AuthResponse> {
     try {
       await signIn('credentials', {
         username,
@@ -21,12 +23,16 @@ export class AuthNextAuthAdapter implements AuthPort {
       throw new Error('Error de inicio de sesión');
     }
   }
+}
 
-  async Logout(): Promise<void> {
+export class AuthNextAuthLogoutAdapter implements AuthLogout {
+  async logout(): Promise<void> {
     await signOut({ redirectTo: '/login' });
   }
+}
 
-  async ActiveSession(): Promise<AuthSession | null> {
+export class AuthNextAuthActiveSessionAdapter implements AuthActiveSession {
+  async activeSession(): Promise<AuthSession | null> {
     const session = (await auth()) as CustomSession;
     if (!session?.user) return null;
 

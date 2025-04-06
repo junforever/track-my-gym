@@ -26,9 +26,10 @@ export class UsersPrismaAdapter implements UsersPort {
     try {
       return await prisma.users.findUnique({ where: { username } });
     } catch (error) {
-      const errorMsg = 'Error al buscar el usuario';
-      console.error(error);
-      throw new Error(errorMsg);
+      if (error instanceof Error) {
+        throw new Error(error.message);
+      }
+      throw new Error('Error al buscar el usuario');
     }
   }
   async findUsersById(id: string): Promise<Users | null> {

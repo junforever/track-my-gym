@@ -1,16 +1,36 @@
 'use server';
 
-import { AuthNextAuthAdapter } from '@/modules/auth/infrastructure/nextAuth/AuthNextAuthAdapter';
+import {
+  AuthNextAuthLoginAdapter,
+  AuthNextAuthLogoutAdapter,
+  AuthNextAuthActiveSessionAdapter,
+} from '@/modules/auth/infrastructure/nextAuth/AuthNextAuthAdapter';
 import { AuthResponse, AuthSession } from '@/modules/auth/domain/entities/Auth';
+import {
+  AuthLogout,
+  AuthLogin,
+  AuthActiveSession,
+} from '@/modules/auth/domain/ports/AuthPort';
+import {
+  AuthActiveSessionCase,
+  AuthLogoutCase,
+} from '@/modules/auth/application/AuthUseCases';
 
-const authAdapter = new AuthNextAuthAdapter();
+const authLogin: AuthLogin = new AuthNextAuthLoginAdapter();
+const authLogout: AuthLogout = new AuthNextAuthLogoutAdapter();
+const authActiveSession: AuthActiveSession =
+  new AuthNextAuthActiveSessionAdapter();
+
+const authLogoutCase = new AuthLogoutCase(authLogout);
+const authActiveSessionCase = new AuthActiveSessionCase(authActiveSession);
 
 export async function handleLogin(
   username: string,
   password: string,
 ): Promise<AuthResponse> {
   try {
-    return await authAdapter.Login(username, password);
+    await authLogin.login(username, password);
+    return { ok: true };
   } catch (error) {
     if (error instanceof Error) {
       return { ok: false, error: error.message };
@@ -20,9 +40,9 @@ export async function handleLogin(
 }
 
 export async function handleLogout(): Promise<void> {
-  return authAdapter.Logout();
+  return await authLogoutCase.logout();
 }
 
 export async function handleActiveSession(): Promise<AuthSession | null> {
-  return authAdapter.ActiveSession();
+  return await authActiveSessionCase.activeSession();
 }
